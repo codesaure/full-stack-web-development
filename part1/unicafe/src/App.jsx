@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Headers = ({text}) => (
+const Headers = ({ text }) => (
   <h2>{text}</h2>
 )
 
@@ -8,6 +8,10 @@ const Button = ({ handleClick, text }) => (
   <button onClick={handleClick}>
     {text}
   </button>
+)
+
+const Statistics = (props) => (
+  <span>{props.text} {props.score} </span>
 )
 
 const App = () => {
@@ -22,17 +26,17 @@ const App = () => {
 
   return (
     <div>
-      <Headers text="Give Feedback"/>
-      <Button text="good" handleClick={increaseGood}/>
-      <Button text="neutral" handleClick={increaseNeutral}/>
-      <Button text="bad" handleClick={increaseBad}/>
-      <Headers text="Statistics"/>
-      <span>Good {good}</span><br/>
-      <span>Neutral {neutral}</span><br/>
-      <span>Bad {bad}</span><br/>
-      <span>All {good+neutral+bad}</span><br/>
-      <span>Average {(good-bad)/(good+neutral+bad)}</span><br/>
-      <span>Positive {good/(good+neutral+bad)*100} %</span><br/>
+      <Headers text="Give Feedback" />
+      <Button text="good" handleClick={increaseGood} />
+      <Button text="neutral" handleClick={increaseNeutral} />
+      <Button text="bad" handleClick={increaseBad} />
+      <Headers text="Statistics" />
+      <Statistics text="Good" score={good}/><br />
+      <Statistics text="Neutral" score={neutral}/><br />
+      <Statistics text="Bad" score={bad}/><br />
+      <Statistics text="All" score={good + neutral + bad} /><br />
+      <Statistics text="Average" score={(good - bad) / (good + neutral + bad)} /><br />
+      <Statistics text="Positive" score= {good / (good + neutral + bad) * 100} /> % <br />
     </div>
   )
 }
