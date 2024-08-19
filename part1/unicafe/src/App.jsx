@@ -27,9 +27,12 @@ const App = () => {
       <Button text="neutral" handleClick={increaseNeutral}/>
       <Button text="bad" handleClick={increaseBad}/>
       <Headers text="Statistics"/>
-      <p>Good {good}</p>
-      <p>Neutral {neutral}</p>
-      <p>Bad {bad}</p>
+      <span>Good {good}</span><br/>
+      <span>Neutral {neutral}</span><br/>
+      <span>Bad {bad}</span><br/>
+      <span>All {good+neutral+bad}</span><br/>
+      <span>Average {(good-bad)/(good+neutral+bad)}</span><br/>
+      <span>Positive {good/(good+neutral+bad)*100} %</span><br/>
     </div>
   )
 }
