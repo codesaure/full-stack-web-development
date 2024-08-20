@@ -1,6 +1,14 @@
 import { useState } from 'react'
 
-const Button = ({text, handleClick}) => (
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+const VotesLine = ({ votes }) => (
+  <span>has {votes} votes</span>
+)
+
+const Button = ({ text, handleClick }) => (
   <button onClick={handleClick}>
     {text}
   </button>
@@ -17,21 +25,26 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
-  const [selected, setSelected] = useState(getRandomInt(anecdotes.length))
 
-  function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
+  const [selected, setSelected] = useState(getRandomInt(anecdotes.length))
+  const [allVotes, setVotes] = useState(Array(anecdotes.length).fill(0))
+
+  const voteAnecdote = () => {
+    const allVotesCopy = [...allVotes]
+    allVotesCopy[selected] += 1
+    setVotes(allVotesCopy)
   }
 
   const generateRandomAnecdote = () => setSelected(getRandomInt(anecdotes.length))
 
   return (
     <div>
-      {anecdotes[selected]}<br/>
-      <Button text="Next Anecdote" handleClick={generateRandomAnecdote}/>
+      {anecdotes[selected]} <br />
+      <VotesLine votes={allVotes[selected]} /> <br />
+      <Button text="Vote" handleClick={voteAnecdote} />
+      <Button text="Next Anecdote" handleClick={generateRandomAnecdote} />
     </div>
-    
+
   )
 }
 
