@@ -4,6 +4,14 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
+const Headers = ({ text }) => (
+  <h2>{text}</h2>
+)
+
+const AnecdotesLine = ({ text }) => (
+  <span>{text}</span>
+)
+
 const VotesLine = ({ votes }) => (
   <span>has {votes} votes</span>
 )
@@ -37,12 +45,20 @@ const App = () => {
 
   const generateRandomAnecdote = () => setSelected(getRandomInt(anecdotes.length))
 
+  const getMostVotedAnecdote = () => allVotes.indexOf(Math.max(... allVotes))
+
+  let mostVotedAnecdote = getMostVotedAnecdote()
+
   return (
     <div>
-      {anecdotes[selected]} <br />
+      <Headers text="Anecdote of the day" />
+      <AnecdotesLine text={anecdotes[selected]} /> <br />
       <VotesLine votes={allVotes[selected]} /> <br />
       <Button text="Vote" handleClick={voteAnecdote} />
       <Button text="Next Anecdote" handleClick={generateRandomAnecdote} />
+      <Headers text="Anecdote with most votes" />
+      <AnecdotesLine text={anecdotes[mostVotedAnecdote]} /> <br />
+      <VotesLine votes={allVotes[mostVotedAnecdote]} />
     </div>
 
   )
