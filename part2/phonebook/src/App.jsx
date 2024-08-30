@@ -1,5 +1,30 @@
 import { useState } from 'react'
 
+const Filter = ({ text, value, handleChange }) => (
+  <div>{text}
+    <input value={value} onChange={handleChange} />
+  </div>
+)
+
+const PersonForm = ({ addPerson, text1, text2, newName, newNumber, handleNameChange, handleNumberChange, buttonText }) => (
+  <form onSubmit={addPerson}>
+    <div>{text1} <input value={newName} onChange={handleNameChange} /></div>
+    <div>{text2} <input value={newNumber} onChange={handleNumberChange} /></div>
+    <div>
+      <button type="submit">{buttonText}</button>
+    </div>
+  </form>
+)
+
+const Person = ({ person }) => <div> {person.name} {person.number}</div>
+
+const Persons = ({ persons }) => (
+  <>
+    {persons.map(person => (<Person key={person.name} person={person} />))}
+  </>
+)
+
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456', id: 1 },
@@ -22,7 +47,6 @@ const App = () => {
   }
 
   const handleNameChange = (event) => {
-    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
@@ -32,7 +56,7 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    if (persons.some(e => e.name === newName)) {
+    if (persons.some(person => person.name === newName)) {
       alert(`${newName} is already added to phonebook`)
       setNewName("")
       setNewNumber("")
@@ -42,6 +66,7 @@ const App = () => {
         number: newNumber
       }
       setPersons(persons.concat(personObject))
+      setFilterResults(persons.concat(personObject))
       setNewName("")
       setNewNumber("")
     }
@@ -50,19 +75,15 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>filter shown with: <input value={filterQuery} onChange={handleFilterChange} /></div>
+      <Filter text="filter shown with " value={filterQuery} handleChange={handleFilterChange} />
 
-      <h2>Add a new person</h2>
-      <form onSubmit={addPerson}>
-        <div>name: <input value={newName} onChange={handleNameChange} /></div>
-        <div>number: <input value={newNumber} onChange={handleNumberChange}/></div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <h3>Add a new person</h3>
+      <PersonForm text1="name: " text2="number: " newName={newName} newNumber={newNumber}
+        handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}
+        buttonText="add" addPerson={addPerson} />
 
-      <h2>Numbers</h2>
-      {filterResults.map(person => <div key={person.name}> {person.name} {person.number}</div>)}
+      <h3>Numbers</h3>
+      <Persons persons={filterResults} />
     </div>
   )
 }
