@@ -17,11 +17,11 @@ const PersonForm = ({ addPerson, text1, text2, newName, newNumber, handleNameCha
   </form>
 )
 
-const Person = ({ person }) => <div> {person.name} {person.number}</div>
+const Person = ({ person, deletePerson }) => <div> {person.name} {person.number} <button onClick={() => deletePerson(person.id)}>delete</button> </div>
 
-const Persons = ({ persons }) => (
+const Persons = ({ persons, deletePerson }) => (
   <>
-    {persons.map(person => (<Person key={person.name} person={person} />))}
+    {persons.map(person => (<Person key={person.name} person={person} deletePerson={deletePerson} />))}
   </>
 )
 
@@ -80,6 +80,20 @@ const App = () => {
     }
   }
 
+  const deletePerson = id => {
+    const personToDelete = persons.find(p => p.id === id)
+    if (confirm(`Delete ${personToDelete.name} ?`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(p => p.id !== id))
+          setFilterResults(persons.filter(p => p.id !== id))
+          setFilterQuery("")
+        }
+        )
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -91,7 +105,7 @@ const App = () => {
         buttonText="add" addPerson={addPerson} />
 
       <h3>Numbers</h3>
-      <Persons persons={filterResults} />
+      <Persons persons={filterResults} deletePerson={deletePerson} />
     </div>
   )
 }
