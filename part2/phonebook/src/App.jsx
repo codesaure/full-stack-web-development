@@ -61,9 +61,23 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-      setNewName("")
-      setNewNumber("")
+
+      if (confirm(`${newName} is already added to phonebook. Do you want to replace the old numer with a new one?`)) {
+        const personToUpdate = persons.find(p => p.name === newName)
+        personService
+          .update(personToUpdate.id, { name: personToUpdate.name, number: newNumber })
+          .then(returnedPerson => {
+            setPersons(persons.map(p => p.id === personToUpdate.id ? returnedPerson: p))
+            setFilterResults(persons.map(p => p.id === personToUpdate.id ? returnedPerson: p))
+            setFilterQuery("")
+            setNewName("")
+            setNewNumber("")
+          })
+      } else {
+        setNewName("")
+        setNewNumber("")
+      }
+
     } else {
       const personObject = {
         name: newName,
@@ -74,6 +88,7 @@ const App = () => {
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
           setFilterResults(persons.concat(returnedPerson))
+          setFilterQuery("")
           setNewName("")
           setNewNumber("")
         })
