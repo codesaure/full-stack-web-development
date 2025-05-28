@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Notification from './components/Notification'
 import personService from './services/persons'
 
 const Filter = ({ text, value, handleChange }) => (
@@ -32,6 +33,7 @@ const App = () => {
   const [filterResults, setFilterResults] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -67,11 +69,17 @@ const App = () => {
         personService
           .update(personToUpdate.id, { name: personToUpdate.name, number: newNumber })
           .then(returnedPerson => {
-            setPersons(persons.map(p => p.id === personToUpdate.id ? returnedPerson: p))
-            setFilterResults(persons.map(p => p.id === personToUpdate.id ? returnedPerson: p))
+            setPersons(persons.map(p => p.id === personToUpdate.id ? returnedPerson : p))
+            setFilterResults(persons.map(p => p.id === personToUpdate.id ? returnedPerson : p))
             setFilterQuery("")
             setNewName("")
             setNewNumber("")
+            setNotificationMessage(
+              `Modified ${returnedPerson.name}`
+            )
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000)
           })
       } else {
         setNewName("")
@@ -91,6 +99,12 @@ const App = () => {
           setFilterQuery("")
           setNewName("")
           setNewNumber("")
+          setNotificationMessage(
+            `Added ${returnedPerson.name}`
+          )
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
         })
     }
   }
@@ -112,6 +126,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} />
       <Filter text="filter shown with " value={filterQuery} handleChange={handleFilterChange} />
 
       <h3>Add a new person</h3>
