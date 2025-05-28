@@ -34,6 +34,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [notificationMessage, setNotificationMessage] = useState(null)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     personService
@@ -120,13 +121,26 @@ const App = () => {
           setFilterQuery("")
         }
         )
+        .catch(error => {
+          setError(true)
+          setNotificationMessage(
+            `Information of ${personToDelete.name} has already been removed from server`
+          )
+          setPersons(persons.filter(p => p.id !== id))
+          setFilterResults(persons.filter(p => p.id !== id))
+          setFilterQuery("")
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+        })
+
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notificationMessage} />
+      <Notification message={notificationMessage} error={error} />
       <Filter text="filter shown with " value={filterQuery} handleChange={handleFilterChange} />
 
       <h3>Add a new person</h3>
